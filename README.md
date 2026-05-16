@@ -1,286 +1,274 @@
-# Technical Documentation: CodeView CLI (v2.0.0)
+# CodeView CLI v3.0
 
-## 1. Executive Summary
-**CodeView CLI** is a modern, cross-platform command-line interface (CLI) and terminal user interface (TUI) toolkit designed for developers to view, edit, and fetch source code with advanced syntax highlighting, intelligent file filtering, and seamless clipboard integration. Built on Python 3.9+, the application leverages a curated stack of contemporary terminal rendering libraries (`rich`, `textual`), syntax engines (`pygments`), and web/data parsing utilities (`requests`, `beautifulsoup4`, `lxml`) to deliver a highly responsive, feature-rich developer experience directly within the terminal.
+A feature-rich command-line tool to **view**, **edit**, **fetch**, and **highlight** code — with two built-in editors, 26+ commands, and syntax highlighting for **500+ programming languages**.
 
-This document provides a comprehensive technical breakdown of the project's architecture, dependency matrix, installation workflows, execution model, development lifecycle, security considerations, and extensibility pathways.
+## Features
 
----
+| Feature | Description |
+|---------|-------------|
+| **Syntax Highlighting** | 500+ languages with 40+ beautiful color themes |
+| **Code Hosting Platforms** | GitHub, GitLab, Bitbucket, Gitee, GitCode, SourceForge, and raw URLs |
+| **Curses TUI Editor** | Full terminal-based editor with multi-tab, Vim keybindings, command palette, file browser, syntax highlighting |
+| **Textual TUI Editor** | Rich Textual-based editor with search, file tree, dialogs |
+| **File Operations** | Open, save, list, search, stats, diff, format, hex dump |
+| **Repository Browser** | Browse file trees of remote repositories |
+| **Project Management** | Initialize projects, configs, stats |
+| **Snippet Library** | Built-in code snippets with management |
+| **Notes System** | Quick note-taking with tags and search |
+| **History Tracking** | Track recently opened files with statistics |
+| **File Watching** | Monitor directories for file changes |
+| **HTTP Server** | Serve directories over HTTP |
+| **Git Integration** | Git log viewer, diff, blame from editor |
+| **Markdown Rendering** | Render markdown to terminal with TOC and stats |
+| **Utilities** | Hex dump, base64 encode/decode, hash computation, clipboard, color palette |
+| **Bookmarks** | Quick navigation bookmarks for directories and files |
+| **REPL** | Interactive Python REPL |
+| **Customizable** | Configurable themes, line numbers, tabs, defaults |
 
-## 2. Project Metadata & Overview
-| Attribute | Value |
-|-----------|-------|
-| **Package Name** | `codeviewcli` |
-| **Current Version** | `2.0.0` |
-| **Author / Maintainer** | CodeView CLI |
-| **License** | MIT License |
-| **Python Requirement** | `>=3.9` |
-| **Target Platforms** | OS Independent (Windows, macOS, Linux) |
-| **Primary Entry Points** | `codeview`, `cv` |
-| **Distribution Type** | Wheel & Source Distribution (PyPI Compatible) |
-| **Description** | A feature-rich CLI tool to view, edit, and fetch code with syntax highlighting |
+## Installation
 
----
-
-## 3. System Requirements & Compatibility
-
-### 3.1 Runtime Environment
-- **Python Interpreter**: CPython 3.9 or higher (PyPy 3.9+ compatible with minor performance considerations)
-- **Package Manager**: `pip` (v21.0+), `conda`, or `uv`/`pipx`
-- **Terminal Emulator**: Any modern terminal supporting ANSI escape sequences, Unicode, and minimum width of 80 columns
-- **Font**: Monospaced font with ligature support recommended (e.g., JetBrains Mono, Fira Code, Cascadia Code)
-
-### 3.2 Platform-Specific Notes
-- **Windows**: Requires `windows-curses` for native terminal UI compatibility. ConPTY/Windows Terminal recommended for optimal rendering.
-- **macOS / Linux**: Relies on system-provided `ncurses`/`terminfo`. No additional native dependencies required.
-- **Terminal Multiplexers**: Fully compatible with `tmux` and `screen` (ensure `TERM` is set to `screen-256color` or `tmux-256color`).
-
----
-
-## 4. Dependency Architecture & Stack Analysis
-
-The application is engineered around a modular, best-of-breed Python ecosystem. Each dependency serves a specific architectural role:
-
-| Library | Version | Role in Architecture | Technical Justification |
-|---------|---------|----------------------|-------------------------|
-| `click` | `>=8.1.0` | CLI Framework & Routing | Provides robust command parsing, argument validation, and help generation. Replaces `argparse` with decorator-based routing. |
-| `rich` | `>=13.0.0` | Terminal Rendering & Layout | Handles pretty-printing, progress bars, tables, markdown rendering, and ANSI color management. |
-| `textual` | `>=0.50.0` | TUI Framework | Drives the interactive terminal interface (panels, keybindings, async event loop, widget tree). |
-| `pygments` | `>=2.15.0` | Syntax Highlighting Engine | Tokenizes and colors 500+ programming languages. Integrates with `rich`/`textual` for real-time rendering. |
-| `requests` | `>=2.31.0` | HTTP Client | Manages secure web requests for remote code fetching, API interactions, and metadata retrieval. |
-| `beautifulsoup4` | `>=4.12.0` | HTML/XML Parsing | Extracts raw code/text from web pages, documentation sites, or paste services. |
-| `lxml` | `>=4.9.0` | High-Performance Parser | Accelerates `bs4` parsing speed and XPath/CSS selector support. Fallback to `html.parser` if unavailable. |
-| `pathspec` | `>=0.11.0` | File Filtering & Ignore Patterns | Implements `.gitignore`-style glob matching for intelligent file tree traversal and exclusion rules. |
-| `pyperclip` | `>=1.8.0` | Cross-Platform Clipboard | Enables seamless copy/paste operations between terminal sessions and host OS clipboard. |
-| `windows-curses` | `>=2.3.0` | Windows TUI Compatibility | Polyfills missing `curses` module on Windows, required by `textual` for terminal control. |
-
----
-
-## 5. Installation & Deployment Guide
-
-### 5.1 Standard Installation (PyPI)
 ```bash
-pip install codeviewcli
-```
-*Verifies installation:*
-```bash
-codeview --version
-# or
-cv --version
-```
-
-### 5.2 Development / Editable Installation
-```bash
-git clone <repository-url>
+# Clone or download and run:
 cd codeviewcli
 pip install -e .
-```
-*Installs in editable mode, enabling live code reloading and debugging.*
 
-### 5.3 Isolated Environment Execution (Recommended)
+# Or use the installer:
+install.bat          # Windows
+```
+
+## Quick Start
+
 ```bash
-pip install pipx
-pipx install codeviewcli
-codeview --help
+# View a local file with syntax highlighting
+codeview app.py
+
+# View code from GitHub (any platform supported)
+codeview https://github.com/user/repo/blob/main/src/app.py
+
+# View with a different theme
+codeview --theme dracula main.js
+
+# Force a specific language
+codeview --language python script.txt
+
+# Open the curses editor (full-featured, Vim-like)
+codeview edit --curses
+codeview edit --curses app.py
+
+# Open the Textual editor
+codeview edit
+codeview edit app.py
+
+# Browse directory tree
+codeview tree src/
+codeview tree --depth 2
+
+# Search text in files
+codeview search "TODO" src/ --pattern "*.py"
+
+# List files with details
+codeview ls -r -l
+codeview ls src/ --pattern "*.py"
+
+# Show file info
+codeview info app.py
+
+# Code statistics
+codeview stats src/
+
+# Show differences
+codeview diff old.py new.py
+
+# Fetch and save code from a URL
+codeview fetch https://github.com/user/repo/blob/main/app.py --save local.py
+
+# Browse a remote repository
+codeview browse https://github.com/user/repo
+
+# Copy code to clipboard
+codeview clip app.py
+
+# List available themes
+codeview themes
+codeview themes --set nord
+
+# List supported languages
+codeview langs
+codeview langs --search rust
+
+# Manage configuration
+codeview config --list
+codeview config --set theme dracula
+
+# ─── New in v3.0 ───
+
+# Hex dump viewer
+codeview hex app.exe
+codeview hex data.bin --offset 1024 --size 512 -b 32
+
+# Base64 encode/decode
+codeview base64 encode "Hello World"
+codeview base64 decode SGVsbG8=
+
+# Hash computation
+codeview hash app.py --algorithm sha256
+codeview hash app.py --algorithm all
+
+# Watch directory for changes
+codeview watch src/ --pattern "*.py"
+codeview watch . --duration 60
+
+# Code snippets
+codeview snippets
+codeview snippets --language python
+codeview snippets --add python mysnip ms "My snippet description"
+
+# File history
+codeview history
+codeview history --limit 10 --stats
+codeview history --most
+
+# Quick notes
+codeview notes
+codeview notes --create "Todo" "Buy milk"
+codeview notes --search "keyword"
+codeview notes --tags
+
+# Python REPL
+codeview repl
+
+# HTTP server
+codeview serve src/ --port 9000 --browser
+
+# Color palette
+codeview colors
+
+# Git log
+codeview git-log --limit 10
+codeview git-log --file app.py
+
+# Bookmarks
+codeview bookmark src/ --name project_src
+codeview bookmark --list
+codeview bookmark --remove project_src
+
+# Project management
+codeview project
+codeview project --init --name myapp --language python
+
+# Markdown render
+codeview md README.md
+codeview md README.md --toc --stats
+
+# Basic formatting
+codeview format app.py --in-place
 ```
 
-### 5.4 Build from Source
+## Curses Editor Keyboard Shortcuts
+
+| Mode | Key | Action |
+|------|-----|--------|
+| **INSERT** | `Ctrl+S` | Save file |
+| **INSERT** | `Ctrl+Z` | Undo |
+| **INSERT** | `Ctrl+Y` | Redo |
+| **INSERT** | `Ctrl+X` | Cut |
+| **INSERT** | `Ctrl+V` | Paste |
+| **INSERT** | `Ctrl+C` | Copy selection |
+| **INSERT** | `Ctrl+F` | Search |
+| **INSERT** | `Ctrl+B` | Toggle file sidebar |
+| **INSERT** | `Ctrl+L` | Toggle line numbers |
+| **INSERT** | `Ctrl+T` | New tab |
+| **INSERT** | `Ctrl+D` | Duplicate line |
+| **INSERT** | `Ctrl+Q` | Quit |
+| **INSERT** | `Ctrl+G` | Go to line |
+| **INSERT** | `Ctrl+W` | Delete word backward |
+| **INSERT** | `Ctrl+U` | Delete line |
+| **INSERT** | `Ctrl+A` | Go to line start |
+| **INSERT** | `Ctrl+E` | Go to line end |
+| **INSERT** | `Ctrl+N/P` | Move up/down |
+| **INSERT** | `Esc` | Enter Normal mode |
+| **NORMAL** | `i` | Enter Insert mode |
+| **NORMAL** | `v` | Enter Visual mode |
+| **NORMAL** | `h/j/k/l` | Move cursor |
+| **NORMAL** | `w/b` | Word forward/back |
+| **NORMAL** | `x` | Delete character |
+| **NORMAL** | `dd` | Delete line |
+| **NORMAL** | `yy` | Yank line |
+| **NORMAL** | `p` | Paste |
+| **NORMAL** | `o/O` | New line below/above |
+| **NORMAL** | `u` | Undo |
+| **NORMAL** | `Ctrl+R` | Redo |
+| **NORMAL** | `0/$` | Line start/end |
+| **NORMAL** | `gg/G` | File start/end |
+| **NORMAL** | `/` | Search |
+| **NORMAL** | `:` | Command palette |
+| **VISUAL** | `y` | Yank selection |
+| **VISUAL** | `d` | Delete selection |
+| **VISUAL** | `c` | Change selection |
+
+### Command Palette (`:`)
+
+| Command | Description |
+|---------|-------------|
+| `:w` | Save file |
+| `:q` | Quit |
+| `:wq` | Save and quit |
+| `:q!` | Force quit (discard changes) |
+| `:e <file>` | Open file |
+| `:n` | New tab |
+| `:bn / :bp` | Next/previous tab |
+| `:goto <N>` | Go to line N |
+| `:find <text>` | Search for text |
+| `:replace <old> <new>` | Replace all occurrences |
+| `:sort` | Sort selected lines |
+| `:lower / :upper` | Change case |
+| `:join` | Join lines |
+| `:toggle sidebar/number/wrap` | Toggle UI options |
+| `:theme <name>` | Switch theme |
+| `:language <lang>` | Set language |
+| `:tabsize <N>` | Set tab size |
+| `:gitlog` | Show git log |
+| `:gitdiff` | Show git diff |
+| `:copy` | Copy file path |
+
+## Supported Code Hosting Platforms
+
+- **GitHub** - `github.com/user/repo/blob/branch/path`
+- **GitLab** - `gitlab.com/user/repo/-/blob/branch/path`
+- **Bitbucket** - `bitbucket.org/user/repo/src/branch/path`
+- **Gitee** - `gitee.com/user/repo/blob/branch/path`
+- **GitCode** - `gitcode.com/user/repo`
+- **SourceForge** - `sourceforge.net/projects/...`
+- **Raw URLs** - Any raw code URL
+
+## Keyboard Shortcuts (Editor)
+
+| Key | Action |
+|-----|--------|
+| `Ctrl+S` | Save file |
+| `Ctrl+O` | Open file |
+| `Ctrl+F` | Search text |
+| `Ctrl+G` | Go to line |
+| `Ctrl+N` | New file |
+| `Ctrl+T` | Toggle file tree |
+| `Ctrl+Q` | Quit editor |
+
+## Configuration
+
+Configuration is stored in `~/.config/codeviewcli/config.json` (Linux/macOS) or `%APPDATA%\codeviewcli\config.json` (Windows).
+
 ```bash
-pip install build twine
-python -m build
-twine check dist/*
-```
-*Generates `dist/codeviewcli-2.0.0-py3-none-any.whl` and source tarball.*
-
----
-
-## 6. CLI Interface & Execution Model
-
-### 6.1 Entry Point Mapping
-Defined in `setup.py` under `console_scripts`:
-```ini
-codeview = codeviewcli.main:main
-cv       = codeviewcli.main:main
-```
-Both commands invoke the same `main()` coroutine/function within the `codeviewcli.main` module, providing a primary and alias command for user convenience.
-
-### 6.2 Expected Command Structure (Architectural Inference)
-Based on the dependency stack and description, the CLI follows a `click`-driven subcommand hierarchy:
-```bash
-codeview [GLOBAL_OPTIONS] <SUBCOMMAND> [ARGS]
-```
-| Subcommand | Inferred Purpose | Key Dependencies |
-|------------|------------------|------------------|
-| `view` / `show` | Open file with syntax highlighting & TUI panels | `pygments`, `textual`, `rich` |
-| `edit` | Launch lightweight terminal editor mode | `textual`, `click`, `pyperclip` |
-| `fetch` | Retrieve code from URLs, pastebins, or APIs | `requests`, `bs4`, `lxml` |
-| `search` / `grep` | Pattern match across files with ignore rules | `pathspec`, `rich` |
-| `config` | Manage themes, keybindings, and defaults | `click`, `pathlib` |
-
-*Note: Exact subcommands are defined in `codeviewcli/main.py`. The architecture supports lazy-loading of heavy modules (e.g., `textual`, `lxml`) to minimize startup latency.*
-
----
-
-## 7. Core Functional Modules (Architectural Breakdown)
-
-### 7.1 Terminal UI Engine (`textual` + `rich`)
-- Implements an async event loop for responsive keyboard/mouse input.
-- Renders split panels: file explorer (left), syntax viewer (center), metadata/logs (bottom).
-- Uses `rich.console.Console` for fallback rendering when TUI fails.
-
-### 7.2 Syntax Highlighting Pipeline (`pygments`)
-- Auto-detects language via file extension, shebang, or `pathspec` rules.
-- Supports custom theme injection (e.g., `monokai`, `dracula`, `github-dark`).
-- Handles large files via lazy line rendering and virtual scrolling.
-
-### 7.3 Remote Code Fetcher (`requests` + `bs4` + `lxml`)
-- Fetches raw content from GitHub Gists, Pastebin, GitLab, or documentation sites.
-- Strips HTML/Markdown wrappers using CSS selectors/XPath.
-- Validates MIME types and enforces timeout/security headers.
-
-### 7.4 File System Traversal (`pathspec`)
-- Respects `.gitignore`, `.codeviewignore`, and system hidden files.
-- Supports recursive directory scanning with exclusion patterns.
-- Integrates with OS file watchers for live reload (if implemented).
-
-### 7.5 Clipboard Bridge (`pyperclip`)
-- Abstracts OS-specific clipboard APIs (X11, Wayland, macOS `pbcopy`, Windows `ctypes`).
-- Enables `Ctrl+C` / `Ctrl+V` within the TUI without interfering with terminal paste buffers.
-
----
-
-## 8. Development & Build Workflow
-
-### 8.1 Project Structure (Standard Layout)
-```
-codeviewcli/
-├── codeviewcli/
-│   ├── __init__.py
-│   ├── main.py          # Entry point (click group)
-│   ├── cli/             # Subcommand definitions
-│   ├── ui/              # Textual widgets & rich renderers
-│   ├── core/            # File I/O, fetcher, pathspec logic
-│   └── config.py        # Settings & theme management
-├── tests/               # pytest suite
-├── docs/                # Sphinx/MkDocs source
-├── pyproject.toml       # Modern build config (optional)
-└── setup.py             # Legacy packaging (provided)
+codeview config --list        # Show all settings
+codeview config --set theme material
+codeview config --set line_numbers false
+codeview config --reset
 ```
 
-### 8.2 Testing & Quality Assurance
-```bash
-# Install dev dependencies
-pip install pytest black isort mypy flake8
+## Requirements
 
-# Run tests
-pytest tests/ -v
+- Python 3.9+
+- Dependencies (auto-installed): click, rich, pygments, textual, requests, beautifulsoup4, lxml, pathspec
 
-# Format & lint
-black codeviewcli/
-isort codeviewcli/
-mypy codeviewcli/ --ignore-missing-imports
-```
+## License
 
-### 8.3 Continuous Integration (CI) Recommendations
-- **Matrix**: Python 3.9, 3.10, 3.11, 3.12 × (Ubuntu, macOS, Windows)
-- **Steps**: `lint` → `test` → `build` → `publish` (on tag)
-- **Tools**: GitHub Actions, `tox`, `cibuildwheel` (if native extensions added later)
-
----
-
-## 9. Security, Privacy & Licensing
-
-### 9.1 Data Handling
-- **Local Files**: Read-only by default. Edit mode requires explicit user confirmation.
-- **Remote Fetching**: Uses `requests` with default SSL verification. Timeout enforced (`requests.get(..., timeout=10)`).
-- **No Telemetry**: Does not phone home, track usage, or collect analytics.
-
-### 9.2 Security Best Practices
-- Input sanitization for file paths and URLs to prevent directory traversal or SSRF.
-- `pathspec` prevents accidental inclusion of sensitive files (`.env`, `id_rsa`).
-- `lxml` configured with `recover=False` and `huge_tree=False` to mitigate XML bomb attacks.
-
-### 9.3 License
-Distributed under the **MIT License**. Permits commercial use, modification, distribution, and private use. Requires attribution and inclusion of the original license text.
-
----
-
-## 10. Troubleshooting & Common Issues
-
-| Symptom | Likely Cause | Resolution |
-|---------|--------------|------------|
-| `ModuleNotFoundError: No module named 'curses'` (Windows) | Missing `windows-curses` | Run `pip install windows-curses` or ensure `setup.py` conditional installs correctly |
-| TUI fails to render / garbled text | Terminal doesn't support Unicode/256 colors | Switch to Windows Terminal, iTerm2, or GNOME Terminal. Set `TERM=xterm-256color` |
-| Slow startup on large repos | `pathspec` scanning thousands of files | Add `node_modules/`, `.git/` to `.codeviewignore` or use `--no-scan` flag |
-| `lxml` build fails on macOS/Linux | Missing `libxml2`/`libxslt` dev headers | Install `libxml2-dev libxslt1-dev` (Debian/Ubuntu) or `brew install libxml2 libxslt` (macOS) |
-| Clipboard not working in SSH/Tmux | `pyperclip` lacks X11/Wayland display | Set `DISPLAY` variable, use `tmux set-option -g set-clipboard on`, or fallback to manual copy |
-
----
-
-## 11. Contribution Guidelines
-
-1. **Fork & Branch**: Create feature branches from `main`. Use semantic naming (`feat/syntax-theme`, `fix/clipboard-win`).
-2. **Code Standards**: PEP 8 compliance, type hints (`typing` module), docstrings for public APIs.
-3. **Testing**: Add `pytest` cases for new fetchers, parsers, or CLI routes. Maintain >90% coverage.
-4. **Commit Messages**: Follow Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`).
-5. **Pull Request**: Include description, testing evidence, and dependency updates if applicable.
-
----
-
-## 12. Appendix A: Dependency Reference Matrix
-
-| Category | Package | Min Version | Purpose | Conditional? |
-|----------|---------|-------------|---------|--------------|
-| CLI Routing | `click` | `8.1.0` | Argument parsing, command tree | No |
-| UI/Rendering | `rich` | `13.0.0` | Tables, syntax colors, markdown | No |
-| TUI Engine | `textual` | `0.50.0` | Interactive panels, key handling | No |
-| Syntax Engine | `pygments` | `2.15.0` | Language tokenization | No |
-| HTTP Client | `requests` | `2.31.0` | Web fetching, API calls | No |
-| HTML Parser | `beautifulsoup4` | `4.12.0` | DOM traversal, text extraction | No |
-| XML/HTML Lib | `lxml` | `4.9.0` | High-speed parsing backend | No |
-| Path Filtering | `pathspec` | `0.11.0` | `.gitignore` pattern matching | No |
-| Clipboard | `pyperclip` | `1.8.0` | OS clipboard abstraction | No |
-| Windows TUI | `windows-curses` | `2.3.0` | `curses` polyfill for Windows | Yes (`sys_platform == "win32"`) |
-
----
-
-## 13. Appendix B: CLI Entry Point Specification
-
-```python
-# Internal mapping resolved by setuptools
-entry_points={
-    "console_scripts": [
-        "codeview=codeviewcli.main:main",
-        "cv=codeviewcli.main:main"
-    ]
-}
-```
-- Both `codeview` and `cv` execute the identical `main()` function.
-- `cv` serves as a shorthand alias for rapid terminal access.
-- Version `2.0.0` implies breaking changes from `1.x` (likely TUI migration to `textual`, enhanced fetcher, or config overhaul).
-
----
-
-## 14. Version History & Future Roadmap
-
-### 14.1 Current Release: v2.0.0
-- Migrated to `textual` for full TUI experience.
-- Enhanced syntax highlighting via `pygments` 2.15+.
-- Implemented `.gitignore`-aware file traversal (`pathspec`).
-- Added secure remote code fetching (`requests` + `bs4` + `lxml`).
-- Cross-platform clipboard support (`pyperclip`).
-
-### 14.2 Planned Enhancements (v2.1.0+)
-- **Plugin Architecture**: Allow third-party syntax themes and fetcher extensions.
-- **Git Integration**: Branch switching, diff viewing, commit history TUI.
-- **LSP Support**: Integrate `pygls` for autocompletion, go-to-definition, and diagnostics.
-- **Performance Optimization**: Async I/O for large file rendering, memory-mapped file reading.
-- **Packaging**: Native binaries via `PyInstaller` or `Nuitka`, Homebrew/AUR packages.
-
----
-
-*Document Version: 1.0*  
-*Source Reference: `setup.py` (Python 3 / setuptools / PyPI Compatible)*  
-*Target Runtime: Python 3.9+*  
-*License: MIT*  
-*Maintainer: CodeView CLI Project*
+MIT

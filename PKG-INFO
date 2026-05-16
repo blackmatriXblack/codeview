@@ -1,0 +1,302 @@
+Metadata-Version: 2.4
+Name: codeviewcli
+Version: 2.0.0
+Summary: A feature-rich CLI tool to view, edit, and fetch code with syntax highlighting
+Author: CodeView CLI
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: click>=8.1.0
+Requires-Dist: rich>=13.0.0
+Requires-Dist: pygments>=2.15.0
+Requires-Dist: textual>=0.50.0
+Requires-Dist: requests>=2.31.0
+Requires-Dist: beautifulsoup4>=4.12.0
+Requires-Dist: lxml>=4.9.0
+Requires-Dist: pathspec>=0.11.0
+Requires-Dist: windows-curses>=2.3.0; sys_platform == "win32"
+Requires-Dist: pyperclip>=1.8.0
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# CodeView CLI v3.0
+
+A feature-rich command-line tool to **view**, **edit**, **fetch**, and **highlight** code — with two built-in editors, 26+ commands, and syntax highlighting for **500+ programming languages**.
+
+## Features
+
+| Feature | Description |
+|---------|-------------|
+| **Syntax Highlighting** | 500+ languages with 40+ beautiful color themes |
+| **Code Hosting Platforms** | GitHub, GitLab, Bitbucket, Gitee, GitCode, SourceForge, and raw URLs |
+| **Curses TUI Editor** | Full terminal-based editor with multi-tab, Vim keybindings, command palette, file browser, syntax highlighting |
+| **Textual TUI Editor** | Rich Textual-based editor with search, file tree, dialogs |
+| **File Operations** | Open, save, list, search, stats, diff, format, hex dump |
+| **Repository Browser** | Browse file trees of remote repositories |
+| **Project Management** | Initialize projects, configs, stats |
+| **Snippet Library** | Built-in code snippets with management |
+| **Notes System** | Quick note-taking with tags and search |
+| **History Tracking** | Track recently opened files with statistics |
+| **File Watching** | Monitor directories for file changes |
+| **HTTP Server** | Serve directories over HTTP |
+| **Git Integration** | Git log viewer, diff, blame from editor |
+| **Markdown Rendering** | Render markdown to terminal with TOC and stats |
+| **Utilities** | Hex dump, base64 encode/decode, hash computation, clipboard, color palette |
+| **Bookmarks** | Quick navigation bookmarks for directories and files |
+| **REPL** | Interactive Python REPL |
+| **Customizable** | Configurable themes, line numbers, tabs, defaults |
+
+## Installation
+
+```bash
+# Clone or download and run:
+cd codeviewcli
+pip install -e .
+
+# Or use the installer:
+install.bat          # Windows
+```
+
+## Quick Start
+
+```bash
+# View a local file with syntax highlighting
+codeview app.py
+
+# View code from GitHub (any platform supported)
+codeview https://github.com/user/repo/blob/main/src/app.py
+
+# View with a different theme
+codeview --theme dracula main.js
+
+# Force a specific language
+codeview --language python script.txt
+
+# Open the curses editor (full-featured, Vim-like)
+codeview edit --curses
+codeview edit --curses app.py
+
+# Open the Textual editor
+codeview edit
+codeview edit app.py
+
+# Browse directory tree
+codeview tree src/
+codeview tree --depth 2
+
+# Search text in files
+codeview search "TODO" src/ --pattern "*.py"
+
+# List files with details
+codeview ls -r -l
+codeview ls src/ --pattern "*.py"
+
+# Show file info
+codeview info app.py
+
+# Code statistics
+codeview stats src/
+
+# Show differences
+codeview diff old.py new.py
+
+# Fetch and save code from a URL
+codeview fetch https://github.com/user/repo/blob/main/app.py --save local.py
+
+# Browse a remote repository
+codeview browse https://github.com/user/repo
+
+# Copy code to clipboard
+codeview clip app.py
+
+# List available themes
+codeview themes
+codeview themes --set nord
+
+# List supported languages
+codeview langs
+codeview langs --search rust
+
+# Manage configuration
+codeview config --list
+codeview config --set theme dracula
+
+# ─── New in v3.0 ───
+
+# Hex dump viewer
+codeview hex app.exe
+codeview hex data.bin --offset 1024 --size 512 -b 32
+
+# Base64 encode/decode
+codeview base64 encode "Hello World"
+codeview base64 decode SGVsbG8=
+
+# Hash computation
+codeview hash app.py --algorithm sha256
+codeview hash app.py --algorithm all
+
+# Watch directory for changes
+codeview watch src/ --pattern "*.py"
+codeview watch . --duration 60
+
+# Code snippets
+codeview snippets
+codeview snippets --language python
+codeview snippets --add python mysnip ms "My snippet description"
+
+# File history
+codeview history
+codeview history --limit 10 --stats
+codeview history --most
+
+# Quick notes
+codeview notes
+codeview notes --create "Todo" "Buy milk"
+codeview notes --search "keyword"
+codeview notes --tags
+
+# Python REPL
+codeview repl
+
+# HTTP server
+codeview serve src/ --port 9000 --browser
+
+# Color palette
+codeview colors
+
+# Git log
+codeview git-log --limit 10
+codeview git-log --file app.py
+
+# Bookmarks
+codeview bookmark src/ --name project_src
+codeview bookmark --list
+codeview bookmark --remove project_src
+
+# Project management
+codeview project
+codeview project --init --name myapp --language python
+
+# Markdown render
+codeview md README.md
+codeview md README.md --toc --stats
+
+# Basic formatting
+codeview format app.py --in-place
+```
+
+## Curses Editor Keyboard Shortcuts
+
+| Mode | Key | Action |
+|------|-----|--------|
+| **INSERT** | `Ctrl+S` | Save file |
+| **INSERT** | `Ctrl+Z` | Undo |
+| **INSERT** | `Ctrl+Y` | Redo |
+| **INSERT** | `Ctrl+X` | Cut |
+| **INSERT** | `Ctrl+V` | Paste |
+| **INSERT** | `Ctrl+C` | Copy selection |
+| **INSERT** | `Ctrl+F` | Search |
+| **INSERT** | `Ctrl+B` | Toggle file sidebar |
+| **INSERT** | `Ctrl+L` | Toggle line numbers |
+| **INSERT** | `Ctrl+T` | New tab |
+| **INSERT** | `Ctrl+D` | Duplicate line |
+| **INSERT** | `Ctrl+Q` | Quit |
+| **INSERT** | `Ctrl+G` | Go to line |
+| **INSERT** | `Ctrl+W` | Delete word backward |
+| **INSERT** | `Ctrl+U` | Delete line |
+| **INSERT** | `Ctrl+A` | Go to line start |
+| **INSERT** | `Ctrl+E` | Go to line end |
+| **INSERT** | `Ctrl+N/P` | Move up/down |
+| **INSERT** | `Esc` | Enter Normal mode |
+| **NORMAL** | `i` | Enter Insert mode |
+| **NORMAL** | `v` | Enter Visual mode |
+| **NORMAL** | `h/j/k/l` | Move cursor |
+| **NORMAL** | `w/b` | Word forward/back |
+| **NORMAL** | `x` | Delete character |
+| **NORMAL** | `dd` | Delete line |
+| **NORMAL** | `yy` | Yank line |
+| **NORMAL** | `p` | Paste |
+| **NORMAL** | `o/O` | New line below/above |
+| **NORMAL** | `u` | Undo |
+| **NORMAL** | `Ctrl+R` | Redo |
+| **NORMAL** | `0/$` | Line start/end |
+| **NORMAL** | `gg/G` | File start/end |
+| **NORMAL** | `/` | Search |
+| **NORMAL** | `:` | Command palette |
+| **VISUAL** | `y` | Yank selection |
+| **VISUAL** | `d` | Delete selection |
+| **VISUAL** | `c` | Change selection |
+
+### Command Palette (`:`)
+
+| Command | Description |
+|---------|-------------|
+| `:w` | Save file |
+| `:q` | Quit |
+| `:wq` | Save and quit |
+| `:q!` | Force quit (discard changes) |
+| `:e <file>` | Open file |
+| `:n` | New tab |
+| `:bn / :bp` | Next/previous tab |
+| `:goto <N>` | Go to line N |
+| `:find <text>` | Search for text |
+| `:replace <old> <new>` | Replace all occurrences |
+| `:sort` | Sort selected lines |
+| `:lower / :upper` | Change case |
+| `:join` | Join lines |
+| `:toggle sidebar/number/wrap` | Toggle UI options |
+| `:theme <name>` | Switch theme |
+| `:language <lang>` | Set language |
+| `:tabsize <N>` | Set tab size |
+| `:gitlog` | Show git log |
+| `:gitdiff` | Show git diff |
+| `:copy` | Copy file path |
+
+## Supported Code Hosting Platforms
+
+- **GitHub** - `github.com/user/repo/blob/branch/path`
+- **GitLab** - `gitlab.com/user/repo/-/blob/branch/path`
+- **Bitbucket** - `bitbucket.org/user/repo/src/branch/path`
+- **Gitee** - `gitee.com/user/repo/blob/branch/path`
+- **GitCode** - `gitcode.com/user/repo`
+- **SourceForge** - `sourceforge.net/projects/...`
+- **Raw URLs** - Any raw code URL
+
+## Keyboard Shortcuts (Editor)
+
+| Key | Action |
+|-----|--------|
+| `Ctrl+S` | Save file |
+| `Ctrl+O` | Open file |
+| `Ctrl+F` | Search text |
+| `Ctrl+G` | Go to line |
+| `Ctrl+N` | New file |
+| `Ctrl+T` | Toggle file tree |
+| `Ctrl+Q` | Quit editor |
+
+## Configuration
+
+Configuration is stored in `~/.config/codeviewcli/config.json` (Linux/macOS) or `%APPDATA%\codeviewcli\config.json` (Windows).
+
+```bash
+codeview config --list        # Show all settings
+codeview config --set theme material
+codeview config --set line_numbers false
+codeview config --reset
+```
+
+## Requirements
+
+- Python 3.9+
+- Dependencies (auto-installed): click, rich, pygments, textual, requests, beautifulsoup4, lxml, pathspec
+
+## License
+
+MIT

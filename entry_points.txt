@@ -1,0 +1,3 @@
+[console_scripts]
+codeview = codeviewcli.main:main
+cv = codeviewcli.main:main

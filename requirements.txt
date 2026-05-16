@@ -1,0 +1,10 @@
+click>=8.1.0
+rich>=13.0.0
+pygments>=2.15.0
+textual>=0.50.0
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+pathspec>=0.11.0
+windows-curses>=2.3.0; sys_platform == 'win32'
+pyperclip>=1.8.0
